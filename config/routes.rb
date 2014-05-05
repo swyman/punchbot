@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root 'punchbot#hello'
 
+  post 'message' => 'punchbot#message', as: :message
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
