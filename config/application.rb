@@ -28,5 +28,7 @@ module Punchbot
     # config.i18n.default_locale = :de
 
     config.autoload_paths += %W(#{config.root}/lib)
+
+    config.logger = Logger.new(STDOUT)
   end
 end

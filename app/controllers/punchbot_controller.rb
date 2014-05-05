@@ -9,7 +9,9 @@ class PunchbotController < ApplicationController
   end
 
   def message
-    puts params
+    #puts params
+    logger.error 'params'
+    logger.error params
     if params[:text] == 'go ahead'
       @bot.post_message 'ping'
     end
