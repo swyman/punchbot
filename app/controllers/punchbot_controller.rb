@@ -4,11 +4,15 @@ class PunchbotController < ApplicationController
   before_action :init_punchbot
 
   def hello
+    puts params
     @bot.post_message params[:text]
   end
 
   def message
-    @bot.post_message params[:text]
+    puts params
+    if params[:text] == 'go ahead'
+      @bot.post_message 'ping'
+    end
   end
 
   private
