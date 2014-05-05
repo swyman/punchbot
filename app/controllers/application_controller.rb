@@ -8,6 +8,6 @@ class ApplicationController < ActionController::Base
   private
 
   def log_params
-    logger.info params
+    logger.error params
   end
 end
