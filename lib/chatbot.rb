@@ -13,6 +13,7 @@ class Chatbot
     @bot_id = '118fb11ee75af2083a1bfbaa1d'
     @post_uri = 'https://api.groupme.com/v3/bots/post'
     @group_id = '8197513'
+    @interval = 30.minutes
   end
 
   def post_message(msg)
@@ -53,7 +54,13 @@ class Chatbot
       reply_to_user('compliment')
     when 'insult'
       reply_to_user('insult')
+    when 'features'
+      features
     end
+  end
+
+  def features
+    post_message '"punchbot compliment" to hear a compliment. "punchbot insult" to hear how i really feel. you can call me "pb" for short.'
   end
 
   def reply_to_user(type, user = nil)
@@ -65,7 +72,7 @@ class Chatbot
   def compliment_user(groupme_id, name)
     if name != 'punchbot'
       user = User.find_or_create_by(groupme_id: groupme_id)
-      if !user.last_complimented || user.last_complimented + 3.hours < Time.now
+      if !user.last_complimented || user.last_complimented + @interval < Time.now
         reply_to_user 'compliment', name
         user.update_attribute(:last_complimented, Time.now)
       end
