@@ -11,6 +11,9 @@ class PunchbotController < ApplicationController
 
   def receive_msg
     @bot.do_eet(params[:punchbot])
+    if Time.now.strftime('%A') == 'Friday'
+      @bot.compliment_user(params[:punchbot][:user_id], params[:punchbot][:name])
+    end
     render text: 'done'
   end
 
