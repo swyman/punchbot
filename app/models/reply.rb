@@ -4,7 +4,17 @@ class Reply < ActiveRecord::Base
     text.gsub('!!s', filler)
   end
 
-  def self.add_compliment(text)
-    Reply.create({text: text, reply_type: 'compliment'})
+  def self.add_compliment(comps)
+    if String === comps
+      comps = [comps]
+    end
+    comps.map {|text| Reply.create({text: text, reply_type: 'compliment'})}
+  end
+
+  def self.add_insult(comps)
+    if String === comps
+      comps = [comps]
+    end
+    comps.map {|text| Reply.create({text: text, reply_type: 'insult'})}
   end
 end
