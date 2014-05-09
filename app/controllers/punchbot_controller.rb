@@ -1,6 +1,7 @@
 class PunchbotController < ApplicationController
-  protect_from_forgery except: :message
+  protect_from_forgery except: [:send_msg, :receive_msg, :bot_exec]
 
+  before_action :log_params
   before_action :init_punchbot
 
   def hello
@@ -8,19 +9,29 @@ class PunchbotController < ApplicationController
     @bot.post_message params[:text]
   end
 
-  def message
-    #puts params
-    logger.error 'params'
-    logger.error params
-    if params[:text] == 'go ahead'
-      @bot.post_message 'ping'
-    end
+  def receive_msg
+    @bot.do_eet(params[:punchbot])
+    render text: 'done'
+  end
+
+  def send_msg
+    @bot.post_message params[:msg]
+    render text: 'done'
+  end
+
+  def bot_exec
+    @bot.send(params[:bot_action])
+    render text: 'done'
   end
 
   private
 
   def init_punchbot
-    @bot = Punchbot::Punchbot.new
+    @bot = Chatbot.new
+  end
+
+  def log_params
+    puts params
   end
 
 end
