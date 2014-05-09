@@ -42,7 +42,7 @@ class Chatbot
       exec_command(match[1])
     elsif /^(hello|hi|greetings|sup|hey) punchbot/i =~ msg[:text]
       post_message("Hey #{msg[:name]}. How's it going?")
-    elsif /(thanks)[\s]?punchbot/i =~ msg[:text]
+    elsif /(thanks)[\s]?(punchbot|pb)/i =~ msg[:text]
       post_message("You're welcome, #{msg[:name]}.")
     end
   end
