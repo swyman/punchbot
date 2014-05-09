@@ -35,4 +35,8 @@ class Chatbot
     post_message("Sup. I'm #{@name}.")
   end
 
+  def do_eet(msg)
+
+  end
+
 end
