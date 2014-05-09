@@ -2,7 +2,7 @@ require 'net/http'
 
 class Chatbot
 
-  attr_reader :bot_id, :post_uri, :last_res
+  attr_reader :bot_id, :post_uri, :last_res, :last_msg
 
   attr_accessor :name
 
@@ -36,13 +36,33 @@ class Chatbot
   end
 
   def do_eet(msg)
-    if /hello punchbot/i =~ msg[:text]
+    @last_msg = msg
+    if (match = /^punchbot|pb (.*)/i.match(msg[:text]))
+      exec_command(match[1])
+    elsif /hello punchbot/i =~ msg[:text]
       post_message("hi #{msg[:name]}")
     elsif /shoes/i =~ msg[:text]
       post_message("i like your slipper socks")
     elsif /ping/i =~ msg[:text]
       post_message("pong")
     end
+  end
+
+  def exec_command(cmd)
+    puts cmd
+    pieces = cmd.split
+    action = pieces[0]
+    case action
+    when 'compliment'
+      compliment
+    end
+  end
+
+  def compliment(user = nil)
+    puts 'complimenting'
+    user ||= @last_msg[:name]
+    reply = Reply.order("RANDOM()").first
+    post_message reply.interpolate user
   end
 
 end
