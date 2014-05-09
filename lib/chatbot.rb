@@ -13,7 +13,7 @@ class Chatbot
     @bot_id = '118fb11ee75af2083a1bfbaa1d'
     @post_uri = 'https://api.groupme.com/v3/bots/post'
     @group_id = '8197513'
-    @interval = 30.minutes
+    @interval = 45.minutes
   end
 
   def post_message(msg)
