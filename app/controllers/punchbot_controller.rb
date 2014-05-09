@@ -10,9 +10,7 @@ class PunchbotController < ApplicationController
   end
 
   def receive_msg
-    if params[:text] == 'go ahead'
-      @bot.post_message 'ping'
-    end
+    @bot.do_eet(params[:punchbot])
     render text: 'done'
   end
 
