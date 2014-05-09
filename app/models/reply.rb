@@ -5,16 +5,21 @@ class Reply < ActiveRecord::Base
   end
 
   def self.add_compliment(comps)
-    if String === comps
-      comps = [comps]
-    end
-    comps.map {|text| Reply.create({text: text, reply_type: 'compliment'})}
+    Reply.add_things(comps, 'compliment')
   end
 
   def self.add_insult(comps)
-    if String === comps
-      comps = [comps]
+    Reply.add_things(comps, 'insult')
+  end
+
+  def self.add_wisdom(comps)
+    Reply.add_things(comps, 'wisdom')
+  end
+
+  def self.add_things(things, type)
+    if String === things
+      things = [things]
     end
-    comps.map {|text| Reply.create({text: text, reply_type: 'insult'})}
+    things.map {|text| Reply.create({text: text, reply_type: type})}
   end
 end

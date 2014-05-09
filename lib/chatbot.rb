@@ -55,6 +55,8 @@ class Chatbot
       @compliment_sent = true
     when 'insult'
       reply_to_user('insult')
+    when 'wisdom'
+      reply_to_user('wisdom')
     when 'features'
       features
     end
