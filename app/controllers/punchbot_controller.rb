@@ -1,6 +1,7 @@
 class PunchbotController < ApplicationController
   protect_from_forgery except: [:send_msg, :receive_msg, :bot_exec]
 
+  before_action :log_params
   before_action :init_punchbot
 
   def hello
@@ -29,6 +30,10 @@ class PunchbotController < ApplicationController
 
   def init_punchbot
     @bot = Chatbot.new
+  end
+
+  def log_params
+    puts params
   end
 
 end
