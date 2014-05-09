@@ -6,13 +6,14 @@ class Chatbot
 
   attr_accessor :name
 
-  def initialize(name = 'Gerald')
+  def initialize(name = 'punchbot')
     @name = name
     @base_uri = 'https://api.groupme.com/v3/'
 
     @bot_id = '118fb11ee75af2083a1bfbaa1d'
     @post_uri = 'https://api.groupme.com/v3/bots/post'
     @group_id = '8197513'
+    @interval = 45.minutes
   end
 
   def post_message(msg)
@@ -51,22 +52,32 @@ class Chatbot
     case action
     when 'compliment'
       reply_to_user('compliment')
+      @compliment_sent = true
     when 'insult'
       reply_to_user('insult')
+    when 'features'
+      features
     end
+  end
+
+  def features
+    post_message '"punchbot compliment" to hear a compliment. "punchbot insult" to hear how i really feel. you can call me "pb" for short.'
   end
 
   def reply_to_user(type, user = nil)
     user ||= @last_msg[:name]
-    reply = Reply.where(:reply_type => type).order("RANDOM()").first
+    reply = Reply.where("reply_type like ? AND (last_sent_at is null OR ( last_sent_at >= current_timestamp - interval '1 hour'))", type).order("RANDOM()").first
+    reply.update_attribute(:last_sent_at, Time.now)
     post_message reply.interpolate user
   end
 
   def compliment_user(groupme_id, name)
-    user = User.find_or_create_by(groupme_id: groupme_id)
-    if !user.last_complimented || user.last_complimented + 15.minutes < Time.now
-      reply_to_user 'compliment', name
-      user.update_attribute(:last_complimented, Time.now)
+    if name != 'punchbot' && !@compliment_sent
+      user = User.find_or_create_by(groupme_id: groupme_id)
+      if !user.last_complimented || user.last_complimented + @interval < Time.now
+        reply_to_user 'compliment', name
+        user.update_attribute(:last_complimented, Time.now)
+      end
     end
   end
 
