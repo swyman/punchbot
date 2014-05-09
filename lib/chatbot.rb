@@ -38,7 +38,7 @@ class Chatbot
   def do_eet(msg)
     if /hello punchbot/i =~ msg[:text]
       post_message("hi #{msg[:name]}")
-    elsif /i like your shoes/i =~ msg[:text]
+    elsif /shoes/i =~ msg[:text]
       post_message("i like your slipper socks")
     elsif /ping/i =~ msg[:text]
       post_message("pong")
