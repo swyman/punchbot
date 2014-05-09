@@ -65,7 +65,7 @@ class Chatbot
   def compliment_user(groupme_id, name)
     if name != 'punchbot'
       user = User.find_or_create_by(groupme_id: groupme_id)
-      if !user.last_complimented || user.last_complimented + 30.minutes < Time.now
+      if !user.last_complimented || user.last_complimented + 3.hours < Time.now
         reply_to_user 'compliment', name
         user.update_attribute(:last_complimented, Time.now)
       end
