@@ -37,14 +37,10 @@ class Chatbot
 
   def do_eet(msg)
     @last_msg = msg
-    if (match = /^punchbot|pb (.*)/i.match(msg[:text]))
+    if (match = /^(?:pb|punchbot) (.*)/i.match(msg[:text]))
       exec_command(match[1])
-    elsif /hello punchbot/i =~ msg[:text]
+    elsif /^(hello|hi|greetings|sup) punchbot/i =~ msg[:text]
       post_message("hi #{msg[:name]}")
-    elsif /shoes/i =~ msg[:text]
-      post_message("i like your slipper socks")
-    elsif /ping/i =~ msg[:text]
-      post_message("pong")
     end
   end
 
@@ -54,14 +50,15 @@ class Chatbot
     action = pieces[0]
     case action
     when 'compliment'
-      compliment
+      reply_to_user('compliment')
+    when 'insult'
+      reply_to_user('insult')
     end
   end
 
-  def compliment(user = nil)
-    puts 'complimenting'
+  def reply_to_user(type, user = nil)
     user ||= @last_msg[:name]
-    reply = Reply.order("RANDOM()").first
+    reply = Reply.where(:reply_type => type).order("RANDOM()").first
     post_message reply.interpolate user
   end
 
