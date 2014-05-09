@@ -40,8 +40,8 @@ class Chatbot
     @last_msg = msg
     if (match = /^(?:pb|punchbot) (.*)/i.match(msg[:text]))
       exec_command(match[1])
-    elsif /^(hello|hi|greetings|sup) punchbot/i =~ msg[:text]
-      post_message("hi #{msg[:name]}")
+    elsif /^(hello|hi|greetings|sup|hey) punchbot/i =~ msg[:text]
+      post_message("Hey #{msg[:name]}. How's it going?")
     end
   end
 
