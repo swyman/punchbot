@@ -62,4 +62,12 @@ class Chatbot
     post_message reply.interpolate user
   end
 
+  def compliment_user(groupme_id, name)
+    user = User.find_or_create_by(groupme_id: groupme_id)
+    if !user.last_complimented || user.last_complimented + 15.minutes < Time.now
+      reply_to_user 'compliment', name
+      user.update_attribute(:last_complimented, Time.now)
+    end
+  end
+
 end
