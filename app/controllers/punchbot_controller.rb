@@ -1,5 +1,5 @@
 class PunchbotController < ApplicationController
-  protect_from_forgery except: [:send_msg, :receive_msg]
+  protect_from_forgery except: [:send_msg, :receive_msg, :bot_exec]
 
   before_action :init_punchbot
 
@@ -28,10 +28,15 @@ class PunchbotController < ApplicationController
     render text: 'done'
   end
 
+  def bot_exec
+    @bot.send(params[:bot_action])
+    render text: 'done'
+  end
+
   private
 
   def init_punchbot
-    @bot = Punchbot::Punchbot.new
+    @bot = Chatbot.new
   end
 
 end

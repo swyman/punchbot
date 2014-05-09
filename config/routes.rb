@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   post 'receive' => 'punchbot#receive_msg', as: :receive_msg
   post 'send' => 'punchbot#send_msg', as: :send_msg
 
+  post 'exec' => 'punchbot#bot_exec', as: :bot_exec
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
