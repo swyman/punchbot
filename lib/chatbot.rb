@@ -52,6 +52,7 @@ class Chatbot
     case action
     when 'compliment'
       reply_to_user('compliment')
+      @compliment_sent = true
     when 'insult'
       reply_to_user('insult')
     when 'features'
@@ -71,7 +72,7 @@ class Chatbot
   end
 
   def compliment_user(groupme_id, name)
-    if name != 'punchbot'
+    if name != 'punchbot' && !@compliment_sent
       user = User.find_or_create_by(groupme_id: groupme_id)
       if !user.last_complimented || user.last_complimented + @interval < Time.now
         reply_to_user 'compliment', name
