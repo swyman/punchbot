@@ -65,7 +65,7 @@ class Chatbot
 
   def reply_to_user(type, user = nil)
     user ||= @last_msg[:name]
-    reply = Reply.where('reply_type like ? AND (last_sent_at is null OR ( last_sent_at >= current_timestamp - interval "20 minutes"))', type).order("RANDOM()").first
+    reply = Reply.where('reply_type like ? AND (last_sent_at is null OR ( last_sent_at >= current_timestamp - interval "1 hour"))', type).order("RANDOM()").first
     reply.update_attribute(:last_sent_at, Time.now)
     post_message reply.interpolate user
   end
