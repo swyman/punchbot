@@ -1,3 +1,5 @@
+require 'net/http'
+
 class Chatbot
 
   attr_reader :bot_id, :post_uri, :last_res
@@ -26,7 +28,7 @@ class Chatbot
   end
 
   def greet(user)
-
+    post_message("hi #{user}")
   end
 
   def introduce_yourself
