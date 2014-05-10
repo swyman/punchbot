@@ -16,6 +16,10 @@ class Reply < ActiveRecord::Base
     Reply.add_things(comps, 'wisdom')
   end
 
+  def self.add_joke(comps)
+    Reply.add_things(comps, 'joke')
+  end
+
   def self.add_things(things, type)
     if String === things
       things = [things]
