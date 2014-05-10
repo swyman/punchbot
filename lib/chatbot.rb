@@ -19,9 +19,12 @@ class Chatbot
   def post_message(msg)
     @text = msg
 
-    uri = URI(@post_uri)
-    @last_res = Net::HTTP.post_form(uri, self.params)
-
+    if Rails.env.development?
+      puts self.params
+    else
+      uri = URI(@post_uri)
+      @last_res = Net::HTTP.post_form(uri, self.params)
+    end
   end
 
   def params
@@ -42,7 +45,7 @@ class Chatbot
       exec_command(match[1])
     elsif /^(hello|hi|greetings|sup|hey) punchbot/i =~ msg[:text]
       post_message("Hey #{msg[:name]}. How's it going?")
-    elsif /(thanks)[\s]?(punchbot|pb)/i =~ msg[:text]
+    elsif /thank(?:s| you)?,?[\s]?(punchbot|pb)/i =~ msg[:text]
       post_message("You're welcome, #{msg[:name]}.")
     end
   end
