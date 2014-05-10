@@ -13,7 +13,7 @@ class Reply < ActiveRecord::Base
   end
 
   def self.add_joke(call, response)
-    Reply.create({text: call, second_text: response, type: 'joke'})
+    Reply.create({text: call, second_text: response, reply_type: 'joke'})
   end
 
   def self.add_things(things, type)
