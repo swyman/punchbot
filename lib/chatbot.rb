@@ -41,13 +41,18 @@ class Chatbot
 
   def do_eet(msg)
     @last_msg = msg
+
     if (match = /^(?:pb|punchbot) (.*)/i.match(msg[:text]))
       exec_command(match[1])
     elsif /^(hello|hi|greetings|sup|hey) punchbot/i =~ msg[:text]
       post_message("Hey #{msg[:name]}. How's it going?")
     elsif /thank(?:s| you)?,?[\s]?(punchbot|pb)/i =~ msg[:text]
       post_message("You're welcome, #{msg[:name]}.")
+    elsif (punchline = $redis[joke_key(@last_msg[:user_id])])
+      post_message punchline
+      $redis.del(joke_key(@last_msg[:user_id]))
     end
+
   end
 
   def exec_command(cmd)
