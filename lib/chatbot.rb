@@ -41,13 +41,18 @@ class Chatbot
 
   def do_eet(msg)
     @last_msg = msg
+
     if (match = /^(?:pb|punchbot) (.*)/i.match(msg[:text]))
       exec_command(match[1])
     elsif /^(hello|hi|greetings|sup|hey) punchbot/i =~ msg[:text]
       post_message("Hey #{msg[:name]}. How's it going?")
     elsif /thank(?:s| you)?,?[\s]?(punchbot|pb)/i =~ msg[:text]
       post_message("You're welcome, #{msg[:name]}.")
+    elsif (punchline = $redis[joke_key(@last_msg[:user_id])])
+      post_message punchline
+      $redis.del(joke_key(@last_msg[:user_id]))
     end
+
   end
 
   def exec_command(cmd)
@@ -60,10 +65,31 @@ class Chatbot
       @compliment_sent = true
     when 'insult'
       reply_to_user('insult')
+    when 'joke'
+      tell_joke
     when 'wisdom'
       reply_to_user('wisdom')
     when 'features'
       features
+    end
+  end
+
+  def tell_joke
+    audience = @last_msg[:user_id]
+    if (punchline = $redis[joke_key(audience)])
+      # send punchline
+      post_message punchline
+      # delete redis entry
+      $redis.del(joke_key(audience))
+    else
+      # get random joke
+      joke = Reply.random_with_type 'joke'
+      # mark joke told timestamp
+      joke.mark_sent
+      # post joke question
+      post_message joke.interpolate @last_msg[:name]
+      # set redis joke key with Reply id
+      $redis.set(joke_key(audience), joke.interpolate(@last_msg[:name], :second_text))
     end
   end
 
@@ -73,7 +99,7 @@ class Chatbot
 
   def reply_to_user(type, user = nil)
     user ||= @last_msg[:name]
-    reply = Reply.where("reply_type like ? AND (last_sent_at is null OR ( last_sent_at >= current_timestamp - interval '1 hour'))", type).order("RANDOM()").first
+    reply = Reply.random_with_type(type)
     reply.update_attribute(:last_sent_at, Time.now)
     post_message reply.interpolate user
   end
@@ -86,6 +112,10 @@ class Chatbot
         user.update_attribute(:last_complimented, Time.now)
       end
     end
+  end
+
+  def joke_key(audience)
+    "joke-#{audience}"
   end
 
 end
