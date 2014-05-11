@@ -4,6 +4,8 @@ class AdminController < ApplicationController
   before_action :log_params
   before_action :init_punchbot
 
+
+  # todo this doesn't work
   def admin
     if /(?:pb|punchbot sleep)/i =~ params[:pb_dadmin][:text]
       $redis.set(sleep_key, 1)
