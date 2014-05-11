@@ -1,4 +1,4 @@
-class PunchbotController < ApplicationController
+class AdminController < ApplicationController
   protect_from_forgery except: [:admin]
 
   before_action :log_params
