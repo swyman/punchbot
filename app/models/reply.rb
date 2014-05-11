@@ -12,6 +12,10 @@ class Reply < ActiveRecord::Base
     Reply.add_things(comps, 'wisdom')
   end
 
+  def self.add_shouldi(comps)
+    Reply.add_things(comps, 'shouldi')
+  end
+
   def self.add_joke(call, response)
     Reply.create({text: call, second_text: response, reply_type: 'joke'})
   end
