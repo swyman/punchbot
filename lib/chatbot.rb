@@ -87,7 +87,7 @@ class Chatbot
   def shouldi
     response = Reply.random_with_type 'shouldi'
     response.mark_sent
-    post_message reponse.interpolate @last_msg[:name]
+    post_message response.interpolate @last_msg[:name]
   end
 
   def features
