@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: replies
+#
+#  id           :integer          not null, primary key
+#  text         :text
+#  reply_type   :string(255)
+#  created_at   :datetime
+#  updated_at   :datetime
+#  last_sent_at :datetime
+#  second_text  :text
+#
+
 class Reply < ActiveRecord::Base
 
   def self.add_compliment(comps)
