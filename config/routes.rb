@@ -7,4 +7,7 @@ Rails.application.routes.draw do
 
   post 'exec' => 'punchbot#bot_exec', as: :bot_exec
 
+  # admin
+  post 'admin' => 'admin#admin', as: :admin
+
 end

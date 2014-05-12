@@ -71,26 +71,23 @@ class Chatbot
       reply_to_user('wisdom')
     when 'features'
       features
+    when 'shouldi'
+      shouldi
     end
   end
 
   def tell_joke
     audience = @last_msg[:user_id]
-    if (punchline = $redis[joke_key(audience)])
-      # send punchline
-      post_message punchline
-      # delete redis entry
-      $redis.del(joke_key(audience))
-    else
-      # get random joke
-      joke = Reply.random_with_type 'joke'
-      # mark joke told timestamp
-      joke.mark_sent
-      # post joke question
-      post_message joke.interpolate @last_msg[:name]
-      # set redis joke key with Reply id
-      $redis.set(joke_key(audience), joke.interpolate(@last_msg[:name], :second_text))
-    end
+    joke = Reply.random_with_type 'joke'
+    joke.mark_sent
+    post_message joke.interpolate @last_msg[:name]
+    $redis.set(joke_key(audience), joke.interpolate(@last_msg[:name], :second_text))
+  end
+
+  def shouldi
+    response = Reply.random_with_type 'shouldi'
+    response.mark_sent
+    post_message response.interpolate @last_msg[:name]
   end
 
   def features
