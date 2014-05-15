@@ -4,16 +4,16 @@ class Chatbot
 
   attr_reader :bot_id, :post_uri, :last_res, :last_msg
 
-  attr_accessor :name
+  attr_accessor :name, :interval
 
-  def initialize(name = 'punchbot')
+  def initialize(bot_id, group_id, name = 'punchbot', interval = nil)
+    @bot_id = bot_id
+    @group_id = group_id
     @name = name
-    @base_uri = 'https://api.groupme.com/v3/'
 
-    @bot_id = '118fb11ee75af2083a1bfbaa1d'
+    @base_uri = 'https://api.groupme.com/v3/'
     @post_uri = 'https://api.groupme.com/v3/bots/post'
-    @group_id = '8197513'
-    @interval = 45.minutes
+    @interval = interval || $redis.get(interval_key) || 45.minutes
   end
 
   def post_message(msg)
@@ -112,7 +112,11 @@ class Chatbot
   end
 
   def joke_key(audience)
-    "joke-#{audience}"
+    "punchbot:joke:#{audience}"
+  end
+
+  def interval_key
+    "punchbot:interval"
   end
 
 end
