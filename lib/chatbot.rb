@@ -4,23 +4,24 @@ class Chatbot
 
   attr_reader :bot_id, :post_uri, :last_res, :last_msg
 
-  attr_accessor :name
+  attr_accessor :name, :interval
 
-  def initialize(name = 'punchbot')
+  def initialize(bot_id, group_id, name = 'punchbot', interval = nil)
+    @bot_id = bot_id
+    @group_id = group_id
     @name = name
-    @base_uri = 'https://api.groupme.com/v3/'
 
-    @bot_id = '118fb11ee75af2083a1bfbaa1d'
-    @post_uri = 'https://api.groupme.com/v3/bots/post'
-    @group_id = '8197513'
-    @interval = 45.minutes
+    @base_uri = 'https://api.groupme.com/v3/'
+    @post_uri = "#{@base_uri}/bots/post"
+    @interval = interval || $redis.get(interval_key) || 45.minutes
   end
 
   def post_message(msg)
     @text = msg
 
     if Rails.env.development?
-      puts self.params
+      Rails.logger.info @post_uri
+      Rails.logger.info self.params
     else
       uri = URI(@post_uri)
       @last_res = Net::HTTP.post_form(uri, self.params)
@@ -40,6 +41,7 @@ class Chatbot
   end
 
   def do_eet(msg)
+    Rails.logger.info msg
     @last_msg = msg
 
     if (match = /^(?:pb|punchbot) (.*)/i.match(msg[:text]))
@@ -112,7 +114,11 @@ class Chatbot
   end
 
   def joke_key(audience)
-    "joke-#{audience}"
+    "punchbot:joke:#{audience}"
+  end
+
+  def interval_key
+    "punchbot:interval"
   end
 
 end

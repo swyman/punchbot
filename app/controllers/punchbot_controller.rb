@@ -30,7 +30,7 @@ class PunchbotController < ApplicationController
   private
 
   def init_punchbot
-    @bot = Chatbot.new
+    @bot = Chatbot.new(ENV['GROUPME_BOT_ID'], ENV['GROUPME_GROUP_ID'])
   end
 
   def log_params
