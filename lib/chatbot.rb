@@ -12,7 +12,7 @@ class Chatbot
     @name = name
 
     @base_uri = 'https://api.groupme.com/v3/'
-    @post_uri = 'https://api.groupme.com/v3/bots/post'
+    @post_uri = "#{@base_uri}/bots/post"
     @interval = interval || $redis.get(interval_key) || 45.minutes
   end
 
