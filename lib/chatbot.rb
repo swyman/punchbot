@@ -20,7 +20,8 @@ class Chatbot
     @text = msg
 
     if Rails.env.development?
-      puts self.params
+      Rails.logger.info @post_uri
+      Rails.logger.info self.params
     else
       uri = URI(@post_uri)
       @last_res = Net::HTTP.post_form(uri, self.params)
@@ -40,6 +41,7 @@ class Chatbot
   end
 
   def do_eet(msg)
+    Rails.logger.info msg
     @last_msg = msg
 
     if (match = /^(?:pb|punchbot) (.*)/i.match(msg[:text]))
