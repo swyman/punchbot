@@ -1,15 +1,9 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: punchbot_development
-  pool: 5
-  username: punchbot
-  password:
+  database: <%= ENV['APP_NAME'].to_s + '_dev' %>
 
 test:
   adapter: postgresql
   encoding: unicode
-  database: punchbot_test
-  pool: 5
-  username: punchbot
-  password:
+  database: <%= ENV['APP_NAME'].to_s + '_test' %>
